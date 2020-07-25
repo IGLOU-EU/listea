@@ -4,7 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 ## Description
-Listea work with Gitea API
+Listea work with Gitea API   
 Listea is a simple tickets/task viewer on 'notification area'
 
 ## Using
