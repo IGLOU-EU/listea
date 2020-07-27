@@ -126,7 +126,7 @@ func init() {
 	apiRequest.URL = buildAPIRequest(config)
 	apiRequest.Hash = make([]string, len(apiRequest.URL))
 
-	go systray.Run(onReady, onExit)
+	go systray.Run(onReady, nil)
 }
 
 func main() {
@@ -146,9 +146,6 @@ func onReady() {
 	systray.SetIcon(icon.Data)
 	systray.SetTitle("Listea")
 	systray.SetTooltip("Task list viewer with a cup of tea")
-}
-
-func onExit() {
 }
 
 func renderAPISystray(d []APIResultList) {
