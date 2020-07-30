@@ -254,33 +254,25 @@ func buildAPIRequest(config Config) []string {
 func buildAPIQuery(query QueryKey) string {
 	o := ""
 
-	if !empty(query.Q) {
+	if query.Q != "" {
 		o += fmt.Sprintf("q=%s&", query.Q)
 	}
 
-	if !empty(query.Type) {
+	if query.Type != "" {
 		o += fmt.Sprintf("type=%s&", query.Type)
 	}
 
-	if !empty(query.State) {
+	if query.State != "" {
 		o += fmt.Sprintf("state=%s&", query.State)
 	}
 
-	if !empty(query.Labels) {
+	if query.Labels != "" {
 		o += fmt.Sprintf("labels=%s&", query.Labels)
 	}
 
-	if !empty(query.Milestones) {
+	if query.Milestones != "" {
 		o += fmt.Sprintf("milestones=%s&", query.Milestones)
 	}
 
 	return o
-}
-
-func empty(v string) bool {
-	if v != "" {
-		return true
-	}
-
-	return false
 }
