@@ -116,6 +116,7 @@ type MenuList struct {
 }
 
 var apiRequest APIRequest
+var menuItemList []MenuList
 
 func init() {
 	cf, err := ioutil.ReadFile("config")
@@ -132,13 +133,14 @@ func init() {
 	apiRequest.URL = buildAPIRequest(config)
 	apiRequest.Hash = make([]string, len(apiRequest.URL))
 
+	menuItemList = make([]MenuList, len(apiRequest.URL))
+
 	go systray.Run(onReady, nil)
 }
 
 func main() {
 	for {
 		apiResult := make([]APIResultList, len(apiRequest.URL))
-		menuItemList := make([]MenuList, len(apiRequest.URL))
 
 		proceedAPIRequest(apiResult[:])
 		renderAPISystray(apiResult, menuItemList[:])
@@ -163,16 +165,23 @@ func renderAPISystray(d []APIResultList, s []MenuList) {
 			return
 		}
 
+		for j := range s[i].ItemTray {
+			s[i].ItemTray[j].Hide()
+		}
+
 		s[i] = menuItemAPI(v.entry)
-		systray.AddSeparator()
 	}
 }
 
 func menuItemAPI(d []APIResult) MenuList {
-	s := systray.AddMenuItem(fmt.Sprintf("📋 %s", d[0].Repository), "")
-	s.Disable() // For grey style
-
 	var m MenuList
+
+	s := systray.AddMenuItem(fmt.Sprintf("📋 %s", d[0].Repository), "")
+	// For grey style
+	s.Disable()
+	// To be remove with other entry
+	m.ItemTray = append(m.ItemTray, s)
+
 	for _, v := range d {
 		m.ItemTray = append(m.ItemTray, s.AddSubMenuItem(fmt.Sprintf("    (%s) {%b} %s", v.LabelsName, v.Comments, v.Title), v.Body))
 		go trayIsClicked(m.ItemTray[len(m.ItemTray)-1], v.HTMLURL)
