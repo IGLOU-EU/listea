@@ -73,6 +73,7 @@ type APIResultList struct {
 type APIResult struct {
 	ID          int
 	Title       string
+	Body        string
 	Comments    int
 	Repository  string
 	HTMLURL     string
@@ -159,17 +160,16 @@ func renderAPISystray(d []APIResultList) {
 		}
 
 		menuItemAPI(v.entry)
+		systray.AddSeparator()
 	}
 }
 
 func menuItemAPI(d []APIResult) {
-	t := systray.AddMenuItem(fmt.Sprintf("📋 %s", d[0].Repository), "")
-	t.Disable()
-	systray.AddSeparator()
+	s := systray.AddMenuItem(fmt.Sprintf("📋 %s", d[0].Repository), "")
+	s.Disable()
 
 	for _, v := range d {
-		systray.AddMenuItem(fmt.Sprintf("(%s) {%b} %s", v.LabelsName, v.Comments, v.Title), "firefox")
-
+		s.AddSubMenuItem(fmt.Sprintf("    (%s) {%b} %s", v.LabelsName, v.Comments, v.Title), v.Body)
 	}
 }
 
@@ -217,6 +217,7 @@ func proceedAPIResult(body []byte) APIResultList {
 
 		data.ID = v.ID
 		data.Title = v.Title
+		data.Body = v.Body
 		data.Comments = v.Comments
 		data.Repository = v.Repository.FullName
 		data.HTMLURL = v.HTMLURL
