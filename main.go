@@ -12,8 +12,8 @@ import (
 	"net/http"
 	"time"
 
+	"git.iglou.eu/Laboratory/listea/icon"
 	"github.com/getlantern/systray"
-	"github.com/getlantern/systray/example/icon"
 	"github.com/skratchdot/open-golang/open"
 )
 
