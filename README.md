@@ -8,7 +8,8 @@ Listea work with Gitea API
 Listea is a simple tickets/task viewer on 'notification area'
 
 ## Using
-Can be configured on ~/.config/listea/config
+Install with make `make install`
+First run create a config file at `~/.config/listea/config` (Not yet ...)
 
 ## FAQ
 **How do you pronounce Listea ?**   
@@ -20,3 +21,5 @@ See the [LICENSE](https://git.iglou.eu/Laboratory/listea/src/branch/master/LICEN
 for the full license text.
 
 ## Screenshots
+![Tray icon](https://git.iglou.eu/Laboratory/listea/raw/branch/master/screenshot/tray_view.png)
+![Tray Open menu](https://git.iglou.eu/Laboratory/listea/raw/branch/master/screenshot/tray_open.png)
