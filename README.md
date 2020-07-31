@@ -4,12 +4,12 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 ## Description
-Listea work with Gitea API   
+Listea work with Gitea API and GTK   
 Listea is a simple tickets/task viewer on 'notification area'
 
 ## Using
-Install with make `make install`
-First run create a config file at `~/.config/listea/config` (Not yet ...)
+Install with make `make install`    
+First run create an empty config file at `~/.config/listea/config` (Not yet ...)
 
 ## FAQ
 **How do you pronounce Listea ?**   
@@ -21,5 +21,5 @@ See the [LICENSE](https://git.iglou.eu/Laboratory/listea/src/branch/master/LICEN
 for the full license text.
 
 ## Screenshots
-![Tray icon](https://git.iglou.eu/Laboratory/listea/raw/branch/master/screenshot/tray_view.png)
+![Tray icon](https://git.iglou.eu/Laboratory/listea/raw/branch/master/screenshot/tray_view.png)   
 ![Tray Open menu](https://git.iglou.eu/Laboratory/listea/raw/branch/master/screenshot/tray_open.png)
