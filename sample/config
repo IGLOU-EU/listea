@@ -1,0 +1,16 @@
+{
+    "api_url": "https://gitea.com/api/v1",
+    "api_token": "MY_GITEA_API_TOKEN",
+    "list": [
+        {
+            "api_request": "/repos/MY_ORGANISATION/MY_REPOSITORY/issues",
+            "query_key": {
+                "q": "",
+                "type": "issues",
+                "state": "open",
+                "labels": "",
+                "milestones": ""
+            }
+        }
+    ]
+}
