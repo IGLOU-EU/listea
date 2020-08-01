@@ -236,7 +236,13 @@ func menuItemAPI(d []APIResult) MenuList {
 	m.ItemTray = append(m.ItemTray, s)
 
 	for _, v := range d {
-		m.ItemTray = append(m.ItemTray, s.AddSubMenuItem(fmt.Sprintf("    (%s) {%d} %s", v.LabelsName, v.Comments, v.Title), v.Body))
+		t := s.AddSubMenuItem(fmt.Sprintf("    (%s) {%d} %s", v.LabelsName, v.Comments, v.Title), v.Body)
+
+		if v.state == "closed" || v.IsLocked || v.PRMerged {
+			t.Disable()
+		}
+
+		m.ItemTray = append(m.ItemTray, t)
 		go trayIsClicked(m.ItemTray[len(m.ItemTray)-1], v.HTMLURL)
 	}
 
