@@ -13,6 +13,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"strings"
 	"time"
 
 	"git.iglou.eu/Laboratory/listea/icon"
@@ -264,6 +265,11 @@ func proceedAPIRequest(o []APIResultList) {
 			continue
 		}
 		defer get.Body.Close()
+
+		if get.StatusCode != 200 {
+			log.Println("Can't access to API by:", strings.Split(v, "?")[0])
+			continue
+		}
 
 		body, err := ioutil.ReadAll(get.Body)
 		if err != nil {
