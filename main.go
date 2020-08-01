@@ -131,7 +131,6 @@ func init() {
 	}
 
 	if !fileExist(configFile) {
-		//itr := ConfigAPI{List: []List{api_request: "", QueryKey: []QueryKey{Q: "", Type: "", State: "", Labels: "", Milestones: ""}}}
 		var itr ConfigAPI
 		itr.APIURL = "https://gitea.com/api/v1"
 		itr.List = make([]List, 1)
@@ -147,8 +146,6 @@ func init() {
 			log.Fatal(err)
 		}
 	}
-
-	// check
 
 	cf, err := ioutil.ReadFile(configFile)
 	if err != nil {
