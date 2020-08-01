@@ -10,6 +10,9 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
+	"path/filepath"
+	"runtime"
 	"time"
 
 	"git.iglou.eu/Laboratory/listea/icon"
@@ -82,8 +85,8 @@ type APIResult struct {
 	LabelsColor string
 }
 
-// Config inline type def
-type Config struct {
+// ConfigAPI inline type def
+type ConfigAPI struct {
 	APIURL   string `json:"api_url"`
 	APIToken string `json:"api_token"`
 	List     []List `json:"list"`
@@ -119,15 +122,75 @@ var apiRequest APIRequest
 var menuItemList []MenuList
 
 func init() {
-	cf, err := ioutil.ReadFile("config")
+	var configDir string
+
+	switch runtime.GOOS {
+	case "windows":
+		configDir = filepath.Join(os.Getenv("APPDATA"), "listea")
+	case "darwin":
+		configDir = filepath.Join(os.Getenv("HOME"), "Library", "Application Support", "listea")
+	case "linux", "freebsd", "netbsd", "openbsd":
+		x := os.Getenv("XDG_CONFIG_HOME")
+
+		if x == "" {
+			configDir = filepath.Join(os.Getenv("HOME"), ".config", "listea")
+		} else {
+			configDir = filepath.Join(x, "listea")
+		}
+	default:
+		log.Fatal("Your operating system is not supported")
+	}
+
+	configFile := filepath.Join(configDir, "config")
+
+	if !fileExist(configDir) {
+		err := os.MkdirAll(configDir, 0755)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	if !fileExist(configFile) {
+		//itr := ConfigAPI{List: []List{api_request: "", QueryKey: []QueryKey{Q: "", Type: "", State: "", Labels: "", Milestones: ""}}}
+		var itr ConfigAPI
+		itr.APIURL = "https://gitea.com/api/v1"
+		itr.List = make([]List, 1)
+		itr.List[0].QueryKey = QueryKey{"", "issues", "open", "", ""}
+
+		json, err := json.MarshalIndent(itr, "", "    ")
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		err = ioutil.WriteFile(configFile, json, 0750)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	// check
+
+	cf, err := ioutil.ReadFile(configFile)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	var config Config
+	var config ConfigAPI
 	err = json.Unmarshal(cf, &config)
 	if err != nil {
 		log.Fatal(err)
+	}
+
+	if config.APIURL == "" {
+		log.Fatal("No api Url on config file: ", configFile)
+	}
+
+	if config.APIToken == "" {
+		log.Fatal("No api Token on config file: ", configFile)
+	}
+
+	if len(config.List) < 1 || config.List[0].APIRequest == "" {
+		log.Fatal("Empty api request List or no Request configured: ", configFile)
 	}
 
 	apiRequest.URL = buildAPIRequest(config)
@@ -147,6 +210,16 @@ func main() {
 
 		time.Sleep(1 * time.Minute)
 	}
+}
+
+func fileExist(f string) bool {
+	_, err := os.Stat(f)
+
+	if os.IsNotExist(err) {
+		return false
+	}
+
+	return true
 }
 
 func onReady() {
@@ -259,7 +332,7 @@ func proceedAPIResult(body []byte) APIResultList {
 	return res
 }
 
-func buildAPIRequest(config Config) []string {
+func buildAPIRequest(config ConfigAPI) []string {
 	var list []string
 
 	for _, v := range config.List {
