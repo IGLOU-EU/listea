@@ -122,7 +122,7 @@ func init() {
 		log.Fatal("Your operating system is not supported")
 	}
 
-	configFile := filepath.Join(configDir, "config")
+	configFile := filepath.Join(configDir, "config.json")
 
 	if !fileExist(configDir) {
 		err := os.MkdirAll(configDir, 0755)
