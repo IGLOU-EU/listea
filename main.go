@@ -215,7 +215,7 @@ func renderAPISystray(d []APIResultList, s []MenuList) {
 
 	for i, v := range d {
 		if len(v.entry) < 1 {
-			return
+			continue
 		}
 
 		for j := range s[i].ItemTray {
@@ -274,8 +274,6 @@ func proceedAPIRequest(o []APIResultList) {
 			log.Println(err)
 			continue
 		}
-
-		_ = body
 
 		h := sha256.New()
 		h.Write([]byte(body))
