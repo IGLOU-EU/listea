@@ -9,11 +9,15 @@ BIN		?= /usr/local/bin
 MAKE    ?= make
 SUDO    ?= sudo
 
-ICON	:= icon/icon.png
-EXEC    := listea
-GOOUT   := $(shell pwd)/bin
-GOICON	:= icon/icon.go
-GOFILES := main.go icon/icon.go
+ICON		:= icon/icon.png
+ICONNEW		:= icon/icon_new.png
+ICONERR		:= icon/icon_err.png
+EXEC	    := listea
+GOOUT		:= $(shell pwd)/bin
+GOICON		:= icon/icon.go
+GOICONNEW	:= icon/icon_new.go
+GOICONERR	:= icon/icon_err.go
+GOFILES		:= main.go $(GOICON) $(GOICONNEW) $(GOICONERR)
 
 .PHONY: build
 build: godep
@@ -44,6 +48,8 @@ clean:
 .PHONY: icon
 icon: 2goarray
 	$(CAT) $(ICON) | $(GOPATH)/bin/2goarray Data icon > $(GOICON)
+	$(CAT) $(ICONNEW) | $(GOPATH)/bin/2goarray New icon > $(GOICONNEW)
+	$(CAT) $(ICONERR) | $(GOPATH)/bin/2goarray Err icon > $(GOICONERR)
 	$(MAKE) fmt
 
 .PHONY: fmt
@@ -52,7 +58,7 @@ fmt:
 
 .PHONY: 2goarray
 2goarray: 2goarray
-	$(GOFMT) get github.com/cratonica/2goarray
+	$(GO) get github.com/cratonica/2goarray
 
 .PHONY: help
 help:

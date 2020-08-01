@@ -187,6 +187,7 @@ func main() {
 		renderAPISystray(apiResult, menuItemList[:])
 
 		time.Sleep(1 * time.Minute)
+		systray.SetIcon(icon.Data)
 	}
 }
 
@@ -266,6 +267,7 @@ func proceedAPIRequest(o []APIResultList) {
 	for i, v := range apiRequest.URL {
 		get, err := http.Get(v)
 		if err != nil {
+			systray.SetIcon(icon.Err)
 			log.Println("Unable to get on : " + v)
 			log.Println(err)
 			continue
@@ -273,12 +275,14 @@ func proceedAPIRequest(o []APIResultList) {
 		defer get.Body.Close()
 
 		if get.StatusCode != 200 {
+			systray.SetIcon(icon.Err)
 			log.Println("Can't access to API by:", strings.Split(v, "?")[0])
 			continue
 		}
 
 		body, err := ioutil.ReadAll(get.Body)
 		if err != nil {
+			systray.SetIcon(icon.Err)
 			log.Println("Unable read body : " + v)
 			log.Println(err)
 			continue
@@ -289,6 +293,10 @@ func proceedAPIRequest(o []APIResultList) {
 		hsum := fmt.Sprintf("%x", h.Sum(nil))
 
 		if apiRequest.Hash[i] != hsum {
+			if apiRequest.Hash[i] != "" {
+				systray.SetIcon(icon.New)
+			}
+
 			o[i] = proceedAPIResult(body)
 			apiRequest.Hash[i] = hsum
 		}
