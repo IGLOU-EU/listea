@@ -236,7 +236,7 @@ func menuItemAPI(d []APIResult) MenuList {
 	m.ItemTray = append(m.ItemTray, s)
 
 	for _, v := range d {
-		t := s.AddSubMenuItem(fmt.Sprintf("    (%s) {%d} %s", v.LabelsName, v.Comments, v.Title), v.Body)
+		t := s.AddSubMenuItem(fmt.Sprintf("    {%d} (%s) %s", v.Comments, v.LabelsName, v.Title), v.Body)
 
 		if v.state == "closed" || v.IsLocked || v.PRMerged {
 			t.Disable()
