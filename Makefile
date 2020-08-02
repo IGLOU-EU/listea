@@ -15,7 +15,7 @@ SUDO    ?= sudo
 ICON		:= icon/icon.png
 ICONNEW		:= icon/icon_new.png
 ICONERR		:= icon/icon_err.png
-EXEC	    := listea-$(LISTEAV)
+EXEC	    := listea
 GOOUT		:= $(shell pwd)/bin
 GOICON		:= icon/icon.go
 GOICONNEW	:= icon/icon_new.go
@@ -33,7 +33,7 @@ install: build
 
 .PHONY: remove
 remove:
-	$(SUDO) $(RM) -f $(BIN)/$(EXEC)
+	$(SUDO) $(RM) $(BIN)/$(EXEC)
 
 .PHONY: upgrade
 upgrade: remove install
@@ -52,7 +52,7 @@ mod:
 .PHONY: clean
 clean:
 	$(GO) clean
-	$(RM) -f $(GOOUT)/*
+	$(RM) $(GOOUT)/*
 
 .PHONY: icon
 icon: 2goarray
@@ -71,13 +71,13 @@ fmt:
 
 .PHONY: releases
 releases: mob
-	@env GOOS=linux GOARCH=amd64 $(GO) build -o $(GOOUT)/$(EXEC)-linux-amd64 -a
-	@cd $(GOOUT) && $(SHA) $(EXEC)-linux-amd64 > $(EXEC)-linux-amd64.sha256
+	@env GOOS=linux GOARCH=amd64 $(GO) build -o $(GOOUT)/$(EXEC)-$(LISTEAV)-linux-amd64 -a
+	@cd $(GOOUT) && $(SHA) $(EXEC)-linux-amd64 > $(EXEC)-$(LISTEAV)-linux-amd64.sha256
 
 	#@env GOOS=darwin GOARCH=amd64 $(GO) build -o $(GOOUT)/$(EXEC)-darwin-amd64 -a
 
-	@env GO111MODULE=on GOOS=windows GOARCH=amd64 $(GO) build -ldflags "-H=windowsgui" -o $(GOOUT)/$(EXEC)-windows-amd64.exe -a
-	@cd $(GOOUT) && $(SHA) $(EXEC)-windows-amd64.exe > $(EXEC)-windows-amd64.exe.sha256
+	@env GO111MODULE=on GOOS=windows GOARCH=amd64 $(GO) build -ldflags "-H=windowsgui" -o $(GOOUT)/$(EXEC)-$(LISTEAV)-windows-amd64.exe -a
+	@cd $(GOOUT) && $(SHA) $(EXEC)-windows-amd64.exe > $(EXEC)-$(LISTEAV)-windows-amd64.exe.sha256
 
 .PHONY: help
 help:
