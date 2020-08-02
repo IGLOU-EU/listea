@@ -6,6 +6,7 @@ GOPATH ?= $($(GO) env GOPATH)
 
 RM		?= rm
 CP		?= cp
+SHA		?= sha256sum
 CAT		?= cat
 BIN		?= /usr/local/bin
 MAKE    ?= make
@@ -39,6 +40,11 @@ upgrade: remove install
 
 .PHONY: godep
 godep:
+	$(GO) get github.com/getlantern/systray
+	$(GO) get github.com/skratchdot/open-golang/open
+
+.PHONY: mod
+mod:
 	#$(GO) mod init git.iglou.eu/Laboratory/listea
 	$(GO) mod tidy
 	$(GO) mod verify
@@ -64,10 +70,14 @@ fmt:
 	$(GO) get github.com/cratonica/2goarray
 
 .PHONY: releases
-releases: godep
+releases: mob
 	@env GOOS=linux GOARCH=amd64 $(GO) build -o $(GOOUT)/$(EXEC)-linux-amd64 -a
+	@cd $(GOOUT) && $(SHA) $(EXEC)-linux-amd64 > $(EXEC)-linux-amd64.sha256
+
 	#@env GOOS=darwin GOARCH=amd64 $(GO) build -o $(GOOUT)/$(EXEC)-darwin-amd64 -a
+
 	@env GO111MODULE=on GOOS=windows GOARCH=amd64 $(GO) build -ldflags "-H=windowsgui" -o $(GOOUT)/$(EXEC)-windows-amd64.exe -a
+	@cd $(GOOUT) && $(SHA) $(EXEC)-windows-amd64.exe > $(EXEC)-windows-amd64.exe.sha256
 
 .PHONY: help
 help:
