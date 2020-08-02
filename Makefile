@@ -1,3 +1,5 @@
+LISTEAV ?= 0.0.0
+
 GO     ?= go
 GOFMT  ?= gofmt -s
 GOPATH ?= $($(GO) env GOPATH)
@@ -12,7 +14,7 @@ SUDO    ?= sudo
 ICON		:= icon/icon.png
 ICONNEW		:= icon/icon_new.png
 ICONERR		:= icon/icon_err.png
-EXEC	    := listea
+EXEC	    := listea-$(LISTEAV)
 GOOUT		:= $(shell pwd)/bin
 GOICON		:= icon/icon.go
 GOICONNEW	:= icon/icon_new.go
@@ -37,8 +39,9 @@ upgrade: remove install
 
 .PHONY: godep
 godep:
-	$(GO) get github.com/getlantern/systray
-	$(GO) get github.com/skratchdot/open-golang/open
+	#$(GO) mod init git.iglou.eu/Laboratory/listea
+	$(GO) mod tidy
+	$(GO) mod verify
 
 .PHONY: clean
 clean:
@@ -59,6 +62,12 @@ fmt:
 .PHONY: 2goarray
 2goarray: 2goarray
 	$(GO) get github.com/cratonica/2goarray
+
+.PHONY: releases
+releases: godep
+	@env GOOS=linux GOARCH=amd64 $(GO) build -o $(GOOUT)/$(EXEC)-linux-amd64 -a
+	#@env GOOS=darwin GOARCH=amd64 $(GO) build -o $(GOOUT)/$(EXEC)-darwin-amd64 -a
+	@env GO111MODULE=on GOOS=windows GOARCH=amd64 $(GO) build -ldflags "-H=windowsgui" -o $(GOOUT)/$(EXEC)-windows-amd64.exe -a
 
 .PHONY: help
 help:
